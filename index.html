@@ -3,12 +3,34 @@
 <body>
 
 <h2>CEF Redirect Test</h2>
+<span>impr://close</span> 
 
-<button onclick="redirect()">Trigger redirect</button>
+<button onclick="openScheme()">Click to redirect</button>
+
+<p id="result">Status: not tested</p>
 
 <script>
 function redirect() {
   window.location.href = "impr://close?status=ok";
+}
+function tryOpen() {
+  const resultEl = document.getElementById("result");
+  resultEl.textContent = "Status: trying...";
+
+  const start = Date.now();
+
+  // Try to open the custom scheme
+  window.location.href = "impr://close";
+
+  // If nothing happens after delay → assume failure
+  setTimeout(() => {
+    const elapsed = Date.now() - start;
+
+    // Heuristic: if page is still here, likely failed
+    if (elapsed < 2000) {
+      resultEl.textContent = "❌ Failed: no handler detected";
+    }
+  }, 1500);
 }
 </script>
 
